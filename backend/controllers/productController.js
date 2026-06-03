@@ -126,6 +126,15 @@ const addReview = asyncHandler(async (req, res) => {
         rating: Number(rating),
         comment,
     };
+    
+    const alreadyReviewed = product.reviews.find(
+    (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+        res.status(400);
+        throw new Error('You have already reviewed this artwork');
+    }
 
     product.reviews.push(review);
 
