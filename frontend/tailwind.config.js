@@ -8,11 +8,13 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: "#6366f1", // Indigo-500
-                secondary: "#ec4899", // Pink-500
-                background: "#0f172a", // Slate-900
-                surface: "#1e293b", // Slate-800
-                text: "#f8fafc", // Slate-50
+                primary: "var(--primary)",
+                secondary: "var(--secondary)",
+                background: "var(--bg-primary)",
+                surface: "var(--card-bg)",
+                text: "var(--text-primary)",
+                "text-muted": "var(--text-secondary)",
+                "border-color": "var(--border-color)",
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],

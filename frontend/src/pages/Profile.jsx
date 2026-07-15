@@ -43,7 +43,6 @@ const Profile = () => {
         const fetchUserData = async () => {
             try {
                 const { data } = await api.getMe();
-                // Ensure we use the same fields as the login response
                 const storedUser = localStorage.getItem('user');
                 const token = storedUser ? JSON.parse(storedUser)?.token : null;
                 const userWithToken = { ...data, token };
@@ -60,7 +59,6 @@ const Profile = () => {
         }
     }, [activeTab]);
 
-    // Update form data when user context updates
     useEffect(() => {
         if (user && !isEditing && user.name !== undefined) {
             setProfileData({
@@ -143,10 +141,8 @@ const Profile = () => {
             const reader = new FileReader();
             reader.onloadend = async () => {
                 const base64Image = reader.result;
-                // Update local state for immediate feedback
                 setProfileData(prev => ({ ...prev, profileImage: base64Image }));
 
-                // If not currently editing other fields, save the image immediately
                 if (!isEditing) {
                     try {
                         const { data } = await api.updateUserProfile({
@@ -167,21 +163,21 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen pt-24 pb-20 px-4 md:px-8">
+        <div className="min-h-screen pt-24 pb-20 px-4 md:px-8" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-8">
                     {/* Sidebar */}
                     <aside className="w-full md:w-80 space-y-4">
-                        <div className="bg-surface/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 overflow-hidden relative">
+                        <div className="backdrop-blur-xl border rounded-3xl p-6 overflow-hidden relative" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}>
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
                             <div className="flex flex-col items-center text-center">
                                 <div className="relative group mb-4">
                                     <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-secondary p-1">
-                                        <div className="h-full w-full rounded-full overflow-hidden bg-background">
+                                        <div className="h-full w-full rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-primary)' }}>
                                             {profileData.profileImage ? (
                                                 <img src={profileData.profileImage} alt="Profile" className="h-full w-full object-cover" />
                                             ) : (
-                                                <User className="h-full w-full p-4 text-gray-500" />
+                                                <User className="h-full w-full p-4" style={{ color: 'var(--text-secondary)' }} />
                                             )}
                                         </div>
                                     </div>
@@ -190,31 +186,34 @@ const Profile = () => {
                                         <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                                     </label>
                                 </div>
-                                <h2 className="text-xl font-bold text-white">{user?.name}</h2>
-                                <p className="text-sm text-gray-400 mb-6">{user?.email}</p>
+                                <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{user?.name}</h2>
+                                <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>{user?.email}</p>
 
                                 <div className="w-full space-y-2 text-left">
                                     <button
                                         onClick={() => setActiveTab('profile')}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'profile' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'profile' ? 'bg-primary text-white font-bold' : 'hover:bg-white/5'}`}
+                                        style={{ color: activeTab === 'profile' ? '#ffffff' : 'var(--text-secondary)' }}
                                     >
                                         <Settings className="h-5 w-5" /> Profile Settings
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('artworks')}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'artworks' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'artworks' ? 'bg-primary text-white font-bold' : 'hover:bg-white/5'}`}
+                                        style={{ color: activeTab === 'artworks' ? '#ffffff' : 'var(--text-secondary)' }}
                                     >
                                         <Package className="h-5 w-5" /> My Artworks
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('security')}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'security' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'security' ? 'bg-primary text-white font-bold' : 'hover:bg-white/5'}`}
+                                        style={{ color: activeTab === 'security' ? '#ffffff' : 'var(--text-secondary)' }}
                                     >
                                         <Shield className="h-5 w-5" /> Security
                                     </button>
                                 </div>
 
-                                <div className="w-full h-px bg-white/10 my-4" />
+                                <div className="w-full h-px my-4" style={{ backgroundColor: 'var(--border-color)' }} />
 
                                 <button
                                     onClick={handleLogout}
@@ -225,13 +224,12 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        {/* Wishlist Summary Card */}
-                        <div className="bg-surface/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 group cursor-pointer" onClick={() => navigate('/wishlist')}>
+                        <div className="backdrop-blur-xl border rounded-3xl p-6 group cursor-pointer" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }} onClick={() => navigate('/wishlist')}>
                             <div className="flex items-center justify-between mb-2">
                                 <Heart className="h-6 w-6 text-red-500" />
-                                <span className="text-2xl font-bold text-white">{wishlistItems.length}</span>
+                                <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{wishlistItems.length}</span>
                             </div>
-                            <p className="text-sm text-gray-400">Items in your wishlist</p>
+                            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Items in your wishlist</p>
                             <div className="flex items-center gap-2 text-xs text-primary mt-4 group-hover:underline">
                                 View all <ArrowRight className="h-3 w-3" />
                             </div>
@@ -249,9 +247,9 @@ const Profile = () => {
                                     exit={{ opacity: 0, y: -10 }}
                                     className="space-y-6"
                                 >
-                                    <div className="bg-surface/30 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
+                                    <div className="backdrop-blur-xl border rounded-3xl p-8" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}>
                                         <div className="flex justify-between items-center mb-8">
-                                            <h3 className="text-2xl font-bold text-white">Personal Information</h3>
+                                            <h3 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Personal Information</h3>
                                             <button
                                                 onClick={() => setIsEditing(!isEditing)}
                                                 className="text-primary hover:underline text-sm font-medium flex items-center gap-2"
@@ -262,71 +260,76 @@ const Profile = () => {
 
                                         <form onSubmit={handleProfileUpdate} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Full Name</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Full Name</label>
                                                 <div className="relative">
-                                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="text"
                                                         disabled={!isEditing}
                                                         value={profileData.name}
                                                         onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary disabled:opacity-50"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary disabled:opacity-50"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Email Address</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Email Address</label>
                                                 <div className="relative">
-                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="email"
                                                         disabled={true}
                                                         value={user?.email}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none opacity-50"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none opacity-50"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Location</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Location</label>
                                                 <div className="relative">
-                                                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="text"
                                                         disabled={!isEditing}
                                                         placeholder="e.g. New York, USA"
                                                         value={profileData.location}
                                                         onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary disabled:opacity-50"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary disabled:opacity-50"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="md:col-span-2 space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Short Bio</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Short Bio</label>
                                                 <div className="relative">
-                                                    <FileText className="absolute left-4 top-6 h-5 w-5 text-gray-400" />
+                                                    <FileText className="absolute left-4 top-6 h-5 w-5 opacity-40" />
                                                     <textarea
                                                         disabled={!isEditing}
                                                         placeholder="Tell us about yourself..."
                                                         value={profileData.bio}
                                                         onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                                                         rows="3"
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary disabled:opacity-50 resize-none"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary disabled:opacity-50 resize-none"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Date Joined</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Date Joined</label>
                                                 <div className="relative">
-                                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="text"
                                                         disabled={true}
                                                         value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none opacity-50"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none opacity-50"
                                                     />
                                                 </div>
                                             </div>
@@ -352,50 +355,52 @@ const Profile = () => {
                                     className="space-y-6"
                                 >
                                     <div className="flex justify-between items-center mb-4">
-                                        <h3 className="text-2xl font-bold text-white">My Uploaded Artworks</h3>
+                                        <h3 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>My Uploaded Artworks</h3>
                                         <Link to="/upload" className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                                             <Plus className="h-4 w-4" /> New Art
                                         </Link>
                                     </div>
 
                                     {loadingArt ? (
-                                        <div className="text-center py-20 text-gray-500">Loading artworks...</div>
+                                        <div className="text-center py-20" style={{ color: 'var(--text-secondary)' }}>Loading artworks...</div>
                                     ) : myArtworks.length === 0 ? (
-                                        <div className="bg-surface/30 border border-white/10 rounded-3xl p-12 text-center">
-                                            <ShoppingBag className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                                            <p className="text-gray-400">No artworks uploaded yet.</p>
+                                        <div className="border border-white/10 rounded-3xl p-12 text-center" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
+                                            <ShoppingBag className="h-12 w-12 mx-auto mb-4" style={{ color: 'var(--text-secondary)' }} />
+                                            <p style={{ color: 'var(--text-secondary)' }}>No artworks uploaded yet.</p>
                                         </div>
                                     ) : (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                             {myArtworks.map((art) => (
-                                                <div key={art._id} className="bg-surface/30 border border-white/10 rounded-2xl overflow-hidden flex flex-col sm:flex-row gap-4 p-4 group relative">
+                                                <div key={art._id} className="border rounded-2xl overflow-hidden flex flex-col sm:flex-row gap-4 p-4 group relative" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}>
                                                     <Link to={`/product/${art._id}`} className="w-full sm:w-24 h-24 rounded-xl overflow-hidden bg-gray-800 flex-shrink-0">
                                                         <img src={art.images[0]} alt={art.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform" />
                                                     </Link>
                                                     <div className="flex-1 min-w-0">
                                                         <Link to={`/product/${art._id}`}>
-                                                            <h4 className="text-white font-bold truncate hover:text-primary transition-colors">{art.title}</h4>
+                                                            <h4 className="font-bold truncate hover:text-primary transition-colors" style={{ color: 'var(--text-primary)' }}>{art.title}</h4>
                                                         </Link>
                                                         <p className="text-xs text-primary mb-2 uppercase">{art.category}</p>
                                                         <div className="flex items-center gap-4">
-                                                            <span className="text-sm font-bold text-white">Rs. {art.price}</span>
-                                                            <span className="text-[10px] text-gray-500">{art.copies} copies</span>
+                                                            <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Rs. {art.price}</span>
+                                                            <span className="text-[10px]" style={{ color: 'var(--text-secondary)' }}>{art.copies} copies</span>
                                                         </div>
                                                     </div>
                                                     <div className="flex sm:flex-col gap-2 justify-center">
                                                         <button
                                                             onClick={() => navigate(`/product/${art._id}`)}
-                                                            className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
+                                                            style={{ backgroundColor: 'var(--bg-secondary)' }}
+                                                            className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
                                                             title="View Details"
                                                         >
-                                                            <Eye className="h-4 w-4" />
+                                                            <Eye className="h-4 w-4" style={{ color: 'var(--text-secondary)' }} />
                                                         </button>
                                                         <button
                                                             onClick={() => navigate(`/upload?edit=${art._id}`)}
-                                                            className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
+                                                            style={{ backgroundColor: 'var(--bg-secondary)' }}
+                                                            className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
                                                             title="Edit Artwork"
                                                         >
-                                                            <Edit2 className="h-4 w-4" />
+                                                            <Edit2 className="h-4 w-4" style={{ color: 'var(--text-secondary)' }} />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteArtwork(art._id)}
@@ -420,64 +425,62 @@ const Profile = () => {
                                     exit={{ opacity: 0, y: -10 }}
                                     className="space-y-6"
                                 >
-                                    <div className="bg-surface/30 backdrop-blur-xl border border-white/10 rounded-3xl p-8">
-                                        <h3 className="text-2xl font-bold text-white mb-8">Security Settings</h3>
+                                    <div className="backdrop-blur-xl border rounded-3xl p-8" style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}>
+                                        <h3 className="text-2xl font-bold mb-8" style={{ color: 'var(--text-primary)' }}>Security Settings</h3>
 
                                         <form onSubmit={handlePasswordChange} className="max-w-md space-y-6">
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Current Password</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Current Password</label>
                                                 <div className="relative">
-                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="password"
                                                         required
                                                         value={passwordData.currentPassword}
                                                         onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary"
                                                         placeholder="••••••••"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">New Password</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>New Password</label>
                                                 <div className="relative">
-                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="password"
                                                         required
                                                         value={passwordData.newPassword}
                                                         onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary"
                                                         placeholder="••••••••"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Confirm New Password</label>
+                                                <label className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>Confirm New Password</label>
                                                 <div className="relative">
-                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 opacity-40" />
                                                     <input
                                                         type="password"
                                                         required
                                                         value={passwordData.confirmPassword}
                                                         onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-primary"
+                                                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
+                                                        className="w-full border rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-primary"
                                                         placeholder="••••••••"
                                                     />
                                                 </div>
                                             </div>
 
-                                            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-gray-100 transition-all flex items-center justify-center gap-2">
+                                            <button type="submit" className="w-full bg-primary text-white font-bold py-4 rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
                                                 <Lock className="h-5 w-5" /> Change Password
                                             </button>
                                         </form>
-
-                                        <div className="mt-8 pt-8 border-t border-white/10">
-                                            <p className="text-sm text-gray-400 mb-4">Forget your password?</p>
-                                            <button className="text-primary hover:underline font-medium text-sm">Reset via email address</button>
-                                        </div>
                                     </div>
                                 </motion.div>
                             )}
@@ -501,19 +504,21 @@ const Profile = () => {
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-surface border border-white/10 p-8 rounded-3xl max-w-md w-full relative z-10 shadow-2xl text-center"
+                            className="border p-8 rounded-3xl max-w-md w-full relative z-10 shadow-2xl text-center"
+                            style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
                         >
                             <div className="h-16 w-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
                                 <Trash2 className="h-8 w-8 text-red-500" />
                             </div>
-                            <h2 className="text-2xl font-bold mb-4 text-white">Delete Artwork?</h2>
-                            <p className="text-gray-400 mb-8">
+                            <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Delete Artwork?</h2>
+                            <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>
                                 Are you sure you want to remove this masterpiece? This action is permanent and cannot be undone.
                             </p>
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => setShowDeleteConfirm(false)}
-                                    className="flex-1 py-3 px-6 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl transition-colors"
+                                    className="flex-1 py-3 px-6 rounded-xl font-bold transition-colors"
+                                    style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                                 >
                                     Keep Art
                                 </button>

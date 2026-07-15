@@ -19,11 +19,14 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Sleek Loading Component
 const PageLoading = () => (
-    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-background/80 backdrop-blur-xl">
-        <div className="h-1 w-48 bg-white/10 rounded-full overflow-hidden relative">
+    <div 
+        className="fixed inset-0 z-[1000] flex flex-col items-center justify-center backdrop-blur-xl"
+        style={{ backgroundColor: 'var(--bg-primary)', opacity: 0.9 }}
+    >
+        <div className="h-1 w-48 rounded-full overflow-hidden relative" style={{ backgroundColor: 'var(--border-color)' }}>
             <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary animate-progress" />
         </div>
-        <p className="mt-4 text-xs font-black uppercase tracking-[0.3em] text-white/40 animate-pulse">Loading CANVORA</p>
+        <p className="mt-4 text-xs font-black uppercase tracking-[0.3em] animate-pulse" style={{ color: 'var(--text-secondary)' }}>Loading CANVORA</p>
     </div>
 );
 
@@ -34,10 +37,11 @@ function App() {
     const location = useLocation();
     const isAuthPage = location.pathname === '/auth';
 
-    // Also hide navbar/footer for some other routes if needed, but usually just auth
-
     return (
-        <div className="min-h-screen bg-background text-text selection:bg-primary selection:text-white flex flex-col">
+        <div 
+            className="min-h-screen selection:bg-primary selection:text-white flex flex-col transition-colors duration-300"
+            style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+        >
             {!isAuthPage && <Navbar />}
 
             <main className="flex-grow">
@@ -48,9 +52,9 @@ function App() {
 
                         {/* Protected Routes */}
                         <Route path="/collections" element={
-                            <>
+                            <ProtectedRoute>
                                 <Marketplace />
-                            </>
+                            </ProtectedRoute>
                         } />
                         <Route path="/product/:id" element={
                             <ProtectedRoute>

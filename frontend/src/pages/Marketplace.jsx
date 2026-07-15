@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, Monitor, ArrowUpRight, ShoppingBag, Heart } from 'lucide-react';
+import { Search, Filter, ShoppingBag, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import * as api from '../api';
-import { useEffect } from 'react';
-
-import ProtectedRoute from '../components/ProtectedRoute';
 
 const Marketplace = () => {
     const [activeCategory, setActiveCategory] = useState('All');
@@ -32,7 +29,7 @@ const Marketplace = () => {
         'Photography', 'Sculpture', 'Mixed Media'];
 
     const handleWishlistToggle = (e, product) => {
-        e.preventDefault(); // Prevent Link navigation
+        e.preventDefault();
         if (isInWishlist(product._id)) {
             removeFromWishlist(product._id);
         } else {
@@ -41,29 +38,30 @@ const Marketplace = () => {
     };
 
     return (
-        <div className="min-h-screen bg-transparent pt-24 pb-20">
+        <div className="min-h-screen pt-24 pb-20" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                     <div>
-                        <h1 className="text-4xl font-bold mb-4">Explore Collections</h1>
-                        <p className="text-gray-400 max-w-xl">
+                        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Explore Collections</h1>
+                        <p style={{ color: 'var(--text-secondary)' }} className="max-w-xl">
                             Browse through a curated selection of unique digital and physical artworks from creators around the globe.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-4 bg-surface p-2 rounded-xl border border-white/5 w-full md:w-auto">
-                        <Search className="h-5 w-5 text-gray-400 ml-2" />
+                    <div className="flex items-center gap-4 p-2 rounded-xl border w-full md:w-auto" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
+                        <Search className="h-5 w-5 ml-2" style={{ color: 'var(--text-secondary)' }} />
                         <input
                             type="text"
                             placeholder="Search art, artists..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-transparent border-none focus:ring-0 text-white placeholder-gray-500 w-full md:w-64"
+                            className="bg-transparent border-none focus:ring-0 w-full md:w-64"
+                            style={{ color: 'var(--text-primary)', caretColor: 'var(--primary)' }}
                         />
-                        <button className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors">
-                            <Filter className="h-5 w-5 text-gray-300" />
+                        <button className="p-2 bg-black/5 hover:bg-black/10 rounded-lg transition-colors">
+                            <Filter className="h-5 w-5" style={{ color: 'var(--text-secondary)' }} />
                         </button>
                     </div>
                 </div>
@@ -76,8 +74,13 @@ const Marketplace = () => {
                             onClick={() => setActiveCategory(cat)}
                             className={`px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border ${activeCategory === cat
                                 ? 'bg-primary border-primary text-white'
-                                : 'bg-surface border-white/5 text-gray-400 hover:bg-white/5 hover:text-white'
+                                : 'hover:bg-primary/10'
                                 }`}
+                            style={{ 
+                                backgroundColor: activeCategory === cat ? 'var(--primary)' : 'var(--bg-secondary)',
+                                borderColor: activeCategory === cat ? 'var(--primary)' : 'var(--border-color)',
+                                color: activeCategory === cat ? '#ffffff' : 'var(--text-secondary)'
+                            }}
                         >
                             {cat}
                         </button>
@@ -85,8 +88,6 @@ const Marketplace = () => {
                 </div>
 
                 {/* Grid */}
-        <>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {products
                         .filter(p => !user || p.artist?._id !== user._id)
@@ -105,7 +106,8 @@ const Marketplace = () => {
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     whileHover={{ y: -5 }}
-                                    className="bg-surface rounded-2xl overflow-hidden border border-white/5 group"
+                                    className="rounded-2xl overflow-hidden border group"
+                                    style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
                                 >
                                     <div className="relative aspect-[4/5] bg-gray-800 overflow-hidden">
                                         <div className="absolute top-4 right-4 z-30 flex gap-2">
@@ -122,7 +124,6 @@ const Marketplace = () => {
                                             ) : null}
                                         </div>
 
-                                        {/* Image with Scarcity Highlights */}
                                         <div className={`w-full h-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center overflow-hidden transition-all duration-500 ${isSoldOut ? 'grayscale scale-105' : ''}`}>
                                             {product.images && product.images.length > 0 ? (
                                                 <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover" />
@@ -131,16 +132,11 @@ const Marketplace = () => {
                                             )}
                                         </div>
 
-                                        {/* Out of Stock Overlay */}
                                         {isSoldOut && (
                                             <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-10 pointer-events-none">
-                                                <motion.div
-                                                    initial={{ scale: 0.8, opacity: 0 }}
-                                                    animate={{ scale: 1, opacity: 1 }}
-                                                    className="bg-red-500 text-white font-black text-sm tracking-tighter px-6 py-2.5 rounded-full shadow-[0_0_30px_rgba(239,68,68,0.5)] border-2 border-white/20"
-                                                >
+                                                <div className="bg-red-500 text-white font-black text-sm tracking-tighter px-6 py-2.5 rounded-full shadow-lg border-2 border-white/20">
                                                     OUT OF STOCK
-                                                </motion.div>
+                                                </div>
                                             </div>
                                         )}
 
@@ -153,18 +149,16 @@ const Marketplace = () => {
 
                                     <div className="p-4">
                                         <div className="flex justify-between items-start mb-2">
-                                            <h3 className="font-bold text-white truncate pr-2">{product.title}</h3>
-                                            <div className="flex flex-col items-end gap-1">
-                                                <div className="bg-primary/20 text-primary text-xs px-2 py-1 rounded-md font-medium">
-                                                    {product.category}
-                                                </div>
+                                            <h3 className="font-bold truncate pr-2" style={{ color: 'var(--text-primary)' }}>{product.title}</h3>
+                                            <div className="bg-primary/10 text-primary text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider">
+                                                {product.category}
                                             </div>
                                         </div>
-                                        <p className="text-sm text-gray-400 mb-4">Owner: {product.artist?.name || 'Unknown'}</p>
-                                        <div className="flex justify-between items-center border-t border-white/5 pt-4">
+                                        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>Owner: {product.artist?.name || 'Unknown'}</p>
+                                        <div className="flex justify-between items-center border-t border-white/5 pt-4" style={{ borderTopColor: 'var(--border-color)' }}>
                                             <div>
-                                                <p className="text-xs text-gray-500">Price</p>
-                                                <p className="font-bold text-white">Rs. {product.price}</p>
+                                                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Price</p>
+                                                <p className="font-bold" style={{ color: 'var(--text-primary)' }}>Rs. {product.price}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +166,6 @@ const Marketplace = () => {
                             );
                         })}
                 </div>
-        </>
             </div>
         </div>
     );

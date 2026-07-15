@@ -38,30 +38,32 @@ const Requests = () => {
     };
 
     return (
-        <div className="min-h-screen bg-transparent pt-32 pb-20 px-4">
+        <div className="min-h-screen pt-32 pb-20 px-4" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
             <div className="max-w-5xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
                     <div>
                         <h1 className="text-4xl font-bold mb-2">Requests & Offers</h1>
-                        <p className="text-gray-400">Manage your art requests and offers.</p>
+                        <p style={{ color: 'var(--text-secondary)' }}>Manage your art requests and offers.</p>
                     </div>
 
-                    <div className="flex bg-surface/50 backdrop-blur-md p-1 rounded-xl border border-white/5">
+                    <div className="flex backdrop-blur-md p-1 rounded-xl border" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-color)' }}>
                         <button
                             onClick={() => setActiveTab('incoming')}
                             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'incoming'
-                                ? 'bg-primary text-white shadow-lg'
-                                : 'text-gray-400 hover:text-white'
+                                ? 'bg-primary text-white shadow-lg font-bold'
+                                : 'hover:text-primary'
                                 }`}
+                            style={{ color: activeTab === 'incoming' ? '#ffffff' : 'var(--text-secondary)' }}
                         >
                             Incoming <span className="ml-2 bg-white/20 px-1.5 py-0.5 rounded text-xs">{incomingRequests.length}</span>
                         </button>
                         <button
                             onClick={() => setActiveTab('outgoing')}
                             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'outgoing'
-                                ? 'bg-primary text-white shadow-lg'
-                                : 'text-gray-400 hover:text-white'
+                                ? 'bg-primary text-white shadow-lg font-bold'
+                                : 'hover:text-primary'
                                 }`}
+                            style={{ color: activeTab === 'outgoing' ? '#ffffff' : 'var(--text-secondary)' }}
                         >
                             Outgoing <span className="ml-2 bg-white/20 px-1.5 py-0.5 rounded text-xs">{outgoingRequests.length}</span>
                         </button>
@@ -72,35 +74,36 @@ const Requests = () => {
                     {activeTab === 'incoming' ? (
                         <>
                             {incomingRequests.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">No incoming requests yet.</div>
+                                <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>No incoming requests yet.</div>
                             ) : incomingRequests.map((req) => (
                                 <motion.div
                                     key={req._id}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="bg-surface/40 backdrop-blur-md border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/30 transition-colors"
+                                    className="backdrop-blur-md border rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/30 transition-colors"
+                                    style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
                                 >
                                     <div className="flex items-center gap-4 w-full md:w-auto">
-                                        <div className="h-16 w-16 bg-gray-700 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden relative">
+                                        <div className="h-16 w-16 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden relative" style={{ backgroundColor: 'var(--bg-secondary)' }}>
                                             {req.product?.images && req.product.images.length > 0 ? (
                                                 <img src={req.product.images[0]} alt="" className="w-full h-full object-cover" />
                                             ) : (
-                                                <div className="absolute inset-0 flex items-center justify-center text-xs text-white/20 font-bold">IMG</div>
+                                                <div className="absolute inset-0 flex items-center justify-center text-xs opacity-20 font-bold">IMG</div>
                                             )}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg mb-1">{req.product?.title || "Unknown Art"}</h3>
-                                            <div className="flex items-center gap-2 text-sm text-gray-400">
+                                            <h3 className="font-bold text-lg mb-1" style={{ color: 'var(--text-primary)' }}>{req.product?.title || "Unknown Art"}</h3>
+                                            <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                                                 <ArrowDownLeft className="h-4 w-4 text-green-400" />
-                                                <span>Offer from <span className="text-white font-medium">{req.requester?.name || "Unknown"}</span></span>
+                                                <span>Offer from <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{req.requester?.name || "Unknown"}</span></span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
                                         <div className="text-right">
-                                            <p className="text-2xl font-bold font-mono text-white">Rs. {req.price}</p>
-                                            <p className="text-xs text-gray-500 flex items-center justify-end gap-1">
+                                            <p className="text-2xl font-bold font-mono" style={{ color: 'var(--text-primary)' }}>Rs. {req.price}</p>
+                                            <p className="text-xs flex items-center justify-end gap-1" style={{ color: 'var(--text-secondary)' }}>
                                                 <Clock className="h-3 w-3" /> {new Date(req.createdAt).toLocaleDateString()}
                                             </p>
                                         </div>
@@ -108,22 +111,20 @@ const Requests = () => {
                                         <div className="flex gap-2">
                                             {req.status === 'pending' ? (
                                                 <>
-                                                    <>
-                                                        <button
-                                                            onClick={() => handleUpdateStatus(req._id, 'accepted')}
-                                                            className="p-2 bg-green-500/20 hover:bg-green-500/30 text-green-500 rounded-lg border border-green-500/50 transition-colors"
-                                                            title="Accept"
-                                                        >
-                                                            <Check className="h-5 w-5" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleUpdateStatus(req._id, 'rejected')}
-                                                            className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-500 rounded-lg border border-red-500/50 transition-colors"
-                                                            title="Decline"
-                                                        >
-                                                            <X className="h-5 w-5" />
-                                                        </button>
-                                                    </>
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(req._id, 'accepted')}
+                                                        className="p-2 bg-green-500/20 hover:bg-green-500/30 text-green-500 rounded-lg border border-green-500/50 transition-colors"
+                                                        title="Accept"
+                                                    >
+                                                        <Check className="h-5 w-5" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleUpdateStatus(req._id, 'rejected')}
+                                                        className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-500 rounded-lg border border-red-500/50 transition-colors"
+                                                        title="Decline"
+                                                    >
+                                                        <X className="h-5 w-5" />
+                                                    </button>
                                                 </>
                                             ) : (
                                                 <span className={`px-3 py-1 rounded-full text-xs font-medium border ${req.status === 'accepted' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
@@ -139,35 +140,36 @@ const Requests = () => {
                     ) : (
                         <>
                             {outgoingRequests.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">No outgoing requests send.</div>
+                                <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>No outgoing requests send.</div>
                             ) : outgoingRequests.map((req) => (
                                 <motion.div
                                     key={req._id}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="bg-surface/40 backdrop-blur-md border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/30 transition-colors"
+                                    className="backdrop-blur-md border rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 group hover:border-primary/30 transition-colors"
+                                    style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
                                 >
                                     <div className="flex items-center gap-4 w-full md:w-auto">
-                                        <div className="h-16 w-16 bg-gray-700 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden relative">
+                                        <div className="h-16 w-16 rounded-lg flex-shrink-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 overflow-hidden relative" style={{ backgroundColor: 'var(--bg-secondary)' }}>
                                             {req.product?.images && req.product.images.length > 0 ? (
                                                 <img src={req.product.images[0]} alt="" className="w-full h-full object-cover" />
                                             ) : (
-                                                <div className="absolute inset-0 flex items-center justify-center text-xs text-white/20 font-bold">IMG</div>
+                                                <div className="absolute inset-0 flex items-center justify-center text-xs opacity-20 font-bold">IMG</div>
                                             )}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg mb-1">{req.product?.title || "Unknown Art"}</h3>
-                                            <div className="flex items-center gap-2 text-sm text-gray-400">
+                                            <h3 className="font-bold text-lg mb-1" style={{ color: 'var(--text-primary)' }}>{req.product?.title || "Unknown Art"}</h3>
+                                            <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                                                 <ArrowUpRight className="h-4 w-4 text-primary" />
-                                                <span>Request to <span className="text-white font-medium">{req.artist?.name || "Artist"}</span></span>
+                                                <span>Request to <span className="font-medium" style={{ color: 'var(--text-primary)' }}>{req.artist?.name || "Artist"}</span></span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
                                         <div className="text-right">
-                                            <p className="text-2xl font-bold font-mono text-white">Rs. {req.price}</p>
-                                            <p className="text-xs text-gray-500 flex items-center justify-end gap-1">
+                                            <p className="text-2xl font-bold font-mono" style={{ color: 'var(--text-primary)' }}>Rs. {req.price}</p>
+                                            <p className="text-xs flex items-center justify-end gap-1" style={{ color: 'var(--text-secondary)' }}>
                                                 <Clock className="h-3 w-3" /> {new Date(req.createdAt).toLocaleDateString()}
                                             </p>
                                         </div>
@@ -175,8 +177,10 @@ const Requests = () => {
                                         <div className="flex items-center gap-3">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${req.status === 'pending' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' :
                                                 req.status === 'accepted' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
-                                                    'bg-surface border-white/10 text-gray-400'
-                                                }`}>
+                                                    'border-white/10'
+                                                }`}
+                                                style={{ color: (req.status !== 'pending' && req.status !== 'accepted') ? 'var(--text-secondary)' : undefined }}
+                                            >
                                                 {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
                                             </span>
                                             {req.status === 'pending' && (
@@ -194,7 +198,7 @@ const Requests = () => {
                             ))}
 
                             <div className="flex justify-center mt-8">
-                                <Link to="/collections" className="flex items-center gap-2 text-primary hover:text-white transition-colors">
+                                <Link to="/collections" className="flex items-center gap-2 text-primary hover:text-primary transition-colors font-bold">
                                     <Send className="h-4 w-4" /> Send New Request
                                 </Link>
                             </div>
@@ -210,16 +214,18 @@ const Requests = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-surface border border-white/10 p-8 rounded-3xl max-w-md w-full relative z-10 shadow-2xl text-center"
+                        className="border p-8 rounded-3xl max-w-md w-full relative z-10 shadow-2xl text-center"
+                        style={{ backgroundColor: 'var(--card-bg)', borderColor: 'var(--border-color)' }}
                     >
-                        <h2 className="text-2xl font-bold mb-4">Cancel Request?</h2>
-                        <p className="text-gray-400 mb-8">
+                        <h2 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Cancel Request?</h2>
+                        <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>
                             Are you sure you want to cancel this purchase request? This action cannot be undone.
                         </p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setShowConfirm(false)}
-                                className="flex-1 py-3 px-6 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl transition-colors"
+                                className="flex-1 py-3 px-6 rounded-xl font-bold transition-colors"
+                                style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
                             >
                                 No, Keep it
                             </button>

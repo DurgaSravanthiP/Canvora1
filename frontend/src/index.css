@@ -2,54 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light Mode - Default */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111111;
+  --text-secondary: #4b5563;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+  --navbar-bg: #ffffff;
+  --footer-bg: #f9fafb;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --primary: #6366f1;
+  --secondary: #ec4899;
+}
+
+/* Dark Mode */
+html.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --card-bg: #1e293b;
+  --navbar-bg: #0f172a;
+  --footer-bg: #0f172a;
+  --shadow: rgba(0, 0, 0, 0.4);
+  --primary: #818cf8;
+  --secondary: #f472b6;
+}
+
+/* GLOBAL APPLY - ye sabse important hai */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 @layer base {
-    body {
-        @apply overflow-x-hidden min-h-screen transition-colors duration-300;
-        background-attachment: fixed;
-    }
-
-    body.light {
-        @apply bg-white text-black;
-        background-image: linear-gradient(to bottom right, #ffffff, #dbeafe, #c7d2fe);
-    }
-
-    body.dark {
-        @apply text-white;
-        background-image: linear-gradient(to bottom right, #0f172a, #1e1b4b, #312e81);
-    }
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply overflow-x-hidden min-h-screen transition-colors duration-300;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-surface/50;
+  background-color: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-primary/50 rounded-full hover:bg-primary transition-colors;
+  @apply bg-primary/50 rounded-full hover:bg-primary transition-colors;
 }
 
 .glass-panel {
-    @apply bg-surface/40 backdrop-blur-xl border border-white/10;
+  background-color: var(--card-bg);
+  @apply backdrop-blur-xl border border-white/10;
 }
 
 /* Autofill styling */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-    -webkit-text-fill-color: white !important;
-    -webkit-box-shadow: 0 0 0px 1000px #12122b inset !important;
-    transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-primary) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
